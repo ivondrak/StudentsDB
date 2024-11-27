@@ -1,0 +1,60 @@
+-- Vytvoření databáze students_db
+CREATE DATABASE IF NOT EXISTS students_db;
+
+-- Použití databáze students_db
+USE students_db;
+
+-- Vytvoření tabulky students
+CREATE TABLE students (
+    id CHAR(7) PRIMARY KEY,          -- ID o délce 7 alfanumerických znaků
+    first_name VARCHAR(50) NOT NULL, -- Jméno (max. délka 50 znaků)
+    last_name VARCHAR(50) NOT NULL,  -- Příjmení (max. délka 50 znaků)
+    email VARCHAR(100) UNIQUE,       -- E-mail (musí být jedinečný)
+    java_exam TINYINT UNSIGNED,      -- Výsledek zkoušky jako celé číslo (0-255)
+    CHECK (java_exam BETWEEN 0 AND 100) -- Zajištění, že hodnota je v rozsahu 0-100
+);
+
+-- Vložení dat do tabulky students
+INSERT INTO students (id, first_name, last_name, email, java_exam)
+VALUES
+('BOU0086', 'Dhakir', 'Boulmechaour', 'dhakir.boulmechaour.st@vsb.cz',0),
+('DEM0096', 'Gulcin', 'Demirkiran', 'gulcin.demirkiran.st@vsb.cz',0),
+('DON0035', 'Nguyen Hai Dang', 'Do', 'nguyen.hai.dang.do.st@vsb.cz',0),
+('ESK0003', 'Aria', 'Eskandarzadeh', 'aria.eskandarzadeh.st@vsb.cz',0),
+('NGU0138', 'Van Hai Trieu', 'Nguyen', 'van.hai.trieu.nguyen.st@vsb.cz',0),
+('TOR0038', 'Jorge', 'Andres Torres Mas Y Rubi', 'jorge.andres.torres.mas.y.rubi.st@vsb.cz',0),
+('ZUE0008', 'Denis', 'Zuev', 'denis.zuev.st@vsb.cz',0);
+
+-- Výběr všech studentů
+SELECT * FROM students;
+
+-- Aktualizace hodnoty java_exam pro studenta s ID BOU0086
+UPDATE students
+SET java_exam = 97.00
+WHERE id = 'BOU0086';
+
+-- Přihlášení jako administrátor MySQL (např. root)
+-- mysql -u root -p
+
+-- Vytvoření uživatele student s heslem we_love_java
+CREATE USER 'student'@'localhost' IDENTIFIED BY 'we_love_java';
+
+-- Udělení všech práv k databázi students_db
+GRANT ALL PRIVILEGES ON students_db.* TO 'student'@'localhost';
+
+-- Načtení nových práv
+FLUSH PRIVILEGES;
+
+-- Ověření uživatelů
+SELECT User, Host FROM mysql.user;
+
+-- Zobrazení práv uživatele student
+SHOW GRANTS FOR 'student'@'localhost';
+
+-- Povolení vzdáleného přístupu pro uživatele student
+CREATE USER 'student'@'%' IDENTIFIED BY 'we_love_java';
+GRANT ALL PRIVILEGES ON students_db.* TO 'student'@'%';
+FLUSH PRIVILEGES;
+
+-- Ověření vzdáleného přístupu
+SELECT User, Host FROM mysql.user WHERE User = 'student';
