@@ -5,8 +5,8 @@ import java.sql.Statement;
 
 public class StudentsDB {
     public static final String URL = "jdbc:mysql://localhost:3306/students_db";
-    public static final String USER = "root";
-    public static final String PASSWORD = "MajSQL-0293";
+    public static final String USER = "student";
+    public static final String PASSWORD = "we_love_java";
 
     private StudentsClass studentsClass;
 
@@ -14,11 +14,10 @@ public class StudentsDB {
         studentsClass = new StudentsClass();
     }
 
+    // Load all students from the database
     public void loadStudents() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Connecting to database...");
-            System.out.println(URL);
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
@@ -37,6 +36,20 @@ public class StudentsDB {
             }
 
             resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Update the student's Java exam score
+    public void updateJavaExam(String id, int javaExam) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("UPDATE students SET java_exam = " + javaExam + " WHERE id = '" + id + "'");
             statement.close();
             connection.close();
         } catch (Exception e) {

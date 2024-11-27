@@ -2,20 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class StudentsAppGUI extends JFrame {
-    protected JTextField idField, firstNameField, lastNameField, emailField, javaExamField;
-    protected JButton prevButton, nextButton, firstButton, lastButton;
-    protected StudentsDB database;
-    protected StudentsClass students;
-    protected int currentIndex = 0;
+public class ProfessorAppGUI extends StudentsAppGUI {
+    JButton updateButton;
 
-    public StudentsAppGUI(String title) {
-        setTitle(title);
-        setSize(500, 250);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);       
-        createGUI();
-        loadStudents();
-        displayStudent();
+    public ProfessorAppGUI(String title) {
+        super(title);
     }
 
     protected void createGUI() {
@@ -42,10 +33,37 @@ public class StudentsAppGUI extends JFrame {
         emailField.setEditable(false);
         add(emailField);
 
+        
         add(new JLabel("Java Exam:"));
+
+        JPanel associatedPanel = new JPanel();
+        associatedPanel.setLayout(new GridLayout(1, 2));
         javaExamField = new JTextField();
-        javaExamField.setEditable(false);
-        add(javaExamField);
+        javaExamField.setEditable(true);
+        updateButton = new JButton("Update");
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Student student = students.getStudent(currentIndex);
+                try {
+                    int javaExamScore = Integer.parseInt(javaExamField.getText());
+                    if (javaExamScore < 0 || javaExamScore > 100) {
+                        JOptionPane.showMessageDialog(panel, "Java Exam score must be between 0 and 100.");
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(panel, "Please enter a valid integer for Java Exam score.");
+                    return;
+                }
+                student.setJavaExam(javaExamField.getText());
+                database.updateJavaExam(student.getId(), Integer.parseInt(javaExamField.getText()));
+                JOptionPane.showMessageDialog(panel, "Data updated successfully.");
+            }
+        });
+        updateButton.requestFocusInWindow();
+
+        associatedPanel.add(javaExamField);
+        associatedPanel.add(updateButton);
+        add(associatedPanel);
 
         JPanel leftButtonsPanel = new JPanel();
         firstButton = new JButton("<<");
@@ -90,24 +108,13 @@ public class StudentsAppGUI extends JFrame {
         rightButtonsPanel.add(lastButton);
         add(leftButtonsPanel);
         add(rightButtonsPanel);
-    }
 
-    protected void loadStudents() {
-        database = new StudentsDB();
-        database.loadStudents();
-        students = database.getStudentsClass();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                updateButton.requestFocus();
+            }
+        });
     }
-
-    protected void displayStudent() {
-        if (students.getStudentCount() > 0) {
-            Student student = students.getStudent(currentIndex);
-            idField.setText(student.getId());
-            firstNameField.setText(student.getFirstName());
-            lastNameField.setText(student.getLastName());
-            emailField.setText(student.getEmail());
-            javaExamField.setText(student.getJavaExam());
-        }
-    }
+    
 }
-
 

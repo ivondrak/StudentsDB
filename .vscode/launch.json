@@ -2,9 +2,19 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch App GUI",
+            "name": "Launch Professor App",
             "request": "launch",
-            "mainClass": "StudentsAppGUI",
+            "mainClass": "MainProfessor",
+            "classpath": [
+                "bin",
+                "lib/**/*.jar"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Launch Students App",
+            "request": "launch",
+            "mainClass": "MainStudents",
             "classpath": [
                 "bin",
                 "lib/**/*.jar"
