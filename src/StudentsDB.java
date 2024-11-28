@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class StudentsDB {
-    public static final String URL = "jdbc:mysql://localhost:3306/students_db";
+    //public static final String URL = "jdbc:mysql://localhost:3306/students_db";
+    public static final String URL = "jdbc:mysql://vsrvfeia0h-64.vsb.cz:3306/students_db";
     public static final String USER = "student";
     public static final String PASSWORD = "we_love_java";
 
